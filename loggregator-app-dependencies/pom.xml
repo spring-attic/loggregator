@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>loggregator-app-dependencies</artifactId>
-    <version>1.1.0.RC1</version>
+    <version>1.1.0.BUILD-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>loggregator-app-dependencies</name>
     <description>Spring Cloud Stream Time App Dependencies</description>
@@ -23,7 +23,7 @@
             <dependency>
                 <groupId>org.springframework.cloud.stream.app</groupId>
                 <artifactId>spring-cloud-starter-stream-source-loggregator</artifactId>
-                <version>1.1.0.RC1</version>
+                <version>1.1.0.BUILD-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.cloudfoundry</groupId>
@@ -33,7 +33,7 @@
             <dependency>
                 <groupId>org.springframework.cloud.stream.app</groupId>
                 <artifactId>loggregator-app-starters-test-support</artifactId>
-                <version>1.1.0.RC1</version>
+                <version>1.1.0.BUILD-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
