@@ -15,15 +15,6 @@
  */
 package org.springframework.cloud.stream.app.loggregator.source;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -38,15 +29,22 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.cloud.stream.app.loggregator.source.LoggregatorSourceTests.LoggregatorSourceApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test the Spring Cloud Dataflow CloudFoundry Loggregator source
@@ -55,9 +53,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Gary Russell
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = LoggregatorSourceApplication.class)
 @EnableConfigurationProperties(LoggregatorProperties.class)
-@IntegrationTest({"loggregator.applicationName=foo", "loggregator.cloudFoundryUser=bar",
+@SpringBootTest({"loggregator.applicationName=foo", "loggregator.cloudFoundryUser=bar",
 		"loggregator.cloudFoundryPassword=baz", "loggregator.cloudFoundryApi=qux"})
 @DirtiesContext
 public class LoggregatorSourceTests {
