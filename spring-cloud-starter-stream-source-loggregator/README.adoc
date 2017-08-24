@@ -1,0 +1,50 @@
+//tag::ref-doc[]
+= Loggregator Source
+
+A source that can be used to read logging messages from Cloud Foundry Loggregator.
+
+== Input
+
+N/A
+
+== Output
+
+==== Headers:
+
+* `Content-Type: text/plain`
+
+==== Payload:
+
+A `String` with the log message.
+
+== Options
+
+The **$$loggregator$$** $$source$$ has the following options:
+
+//tag::configuration-properties[]
+$$loggregator.application-name$$:: $$<documentation missing>$$ *($$String$$, default: `$$<none>$$`)*
+$$loggregator.cloud-foundry-api$$:: $$<documentation missing>$$ *($$String$$, default: `$$<none>$$`)*
+$$loggregator.cloud-foundry-password$$:: $$<documentation missing>$$ *($$String$$, default: `$$<none>$$`)*
+$$loggregator.cloud-foundry-user$$:: $$<documentation missing>$$ *($$String$$, default: `$$<none>$$`)*
+//end::configuration-properties[]
+
+
+//end::ref-doc[]
+== Build
+
+```
+$ ./mvnw clean install -PgenerateApps
+$ cd apps
+
+You can find the corresponding binder based projects here. You can then cd into one one of the folders and
+build it:
+
+$ ./mvnw clean package
+```
+
+== Examples
+
+```
+java -jar loggregator-source.jar --cloudFoundryApi="api" --cloudFoundryUser="CF user" --cloudFoundryPassword="CF password \
+    --applicationName=app-name
+```
