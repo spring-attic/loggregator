@@ -28,8 +28,6 @@ $$loggregator.cloud-foundry-password$$:: $$<documentation missing>$$ *($$String$
 $$loggregator.cloud-foundry-user$$:: $$<documentation missing>$$ *($$String$$, default: `$$<none>$$`)*
 //end::configuration-properties[]
 
-
-//end::ref-doc[]
 == Build
 
 ```
@@ -48,3 +46,4 @@ $ ./mvnw clean package
 java -jar loggregator-source.jar --cloudFoundryApi="api" --cloudFoundryUser="CF user" --cloudFoundryPassword="CF password \
     --applicationName=app-name
 ```
+//end::ref-doc[]
