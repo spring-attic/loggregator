@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,6 @@ import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.domain.ApplicationLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -41,8 +39,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
@@ -51,6 +49,7 @@ import static org.mockito.Mockito.mock;
  *
  * @author Josh Long
  * @author Gary Russell
+ * @author Chris Schaefer
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @EnableConfigurationProperties(LoggregatorProperties.class)
@@ -58,7 +57,6 @@ import static org.mockito.Mockito.mock;
 		"loggregator.cloudFoundryPassword=baz", "loggregator.cloudFoundryApi=qux"})
 @DirtiesContext
 public class LoggregatorSourceTests {
-
 	@Autowired
 	private Source channels;
 
@@ -67,48 +65,40 @@ public class LoggregatorSourceTests {
 
 	@Test
 	public void testLogReceipt() throws Exception {
-
 		Message<?> received = this.messageCollector.forChannel(this.channels.output()).poll(10, TimeUnit.SECONDS);
 		assertNotNull(received);
-		assertThat((String) received.getPayload(), is(equalTo("hello")));
-		assertThat(
-				(String) received.getHeaders()
+		assertThat(received.getPayload(), is(equalTo("hello")));
+		assertThat(received.getHeaders()
 						.get(LoggregatorMessageSource.LoggregatorHeaders.APPLICATION_ID.asHeader()),
 				is(equalTo("foo")));
-		assertThat((Date) received.getHeaders().get(LoggregatorMessageSource.LoggregatorHeaders.TIMESTAMP.asHeader()),
+		assertThat(received.getHeaders()
+						.get(LoggregatorMessageSource.LoggregatorHeaders.TIMESTAMP.asHeader()),
 				is(equalTo(new Date(1))));
-		assertThat(
-				(ApplicationLog.MessageType) received.getHeaders()
+		assertThat(received.getHeaders()
 						.get(LoggregatorMessageSource.LoggregatorHeaders.MESSAGE_TYPE.asHeader()),
 				is(equalTo(ApplicationLog.MessageType.STDOUT)));
-		assertThat(
-				(String) received.getHeaders().get(LoggregatorMessageSource.LoggregatorHeaders.SOURCE_NAME.asHeader()),
+		assertThat(received.getHeaders()
+						.get(LoggregatorMessageSource.LoggregatorHeaders.SOURCE_NAME.asHeader()),
 				is(equalTo("srcN")));
-		assertThat((String) received.getHeaders().get(LoggregatorMessageSource.LoggregatorHeaders.SOURCE_ID.asHeader()),
+		assertThat(received.getHeaders()
+						.get(LoggregatorMessageSource.LoggregatorHeaders.SOURCE_ID.asHeader()),
 				is(equalTo("srcID")));
 	}
 
 	@SpringBootApplication
 	public static class LoggregatorSourceApplication {
-
 		@Bean
 		public CloudFoundryClient cloudFoundryClient() {
 			CloudFoundryClient mockClient = mock(CloudFoundryClient.class);
-			doAnswer(new Answer<Void>() {
-
-				@Override
-				public Void answer(InvocationOnMock invocation) throws Throwable {
-					ApplicationLogListener listener = invocation.getArgumentAt(1, ApplicationLogListener.class);
-					listener.onMessage(new ApplicationLog("foo", "hello", new Date(1),
-							ApplicationLog.MessageType.STDOUT, "srcN", "srcID"));
-					listener.onComplete();
-					return null;
-				}
-
+			doAnswer(invocation -> {
+				ApplicationLogListener listener = invocation.getArgument(1);
+				listener.onMessage(new ApplicationLog("foo", "hello", new Date(1),
+						ApplicationLog.MessageType.STDOUT, "srcN", "srcID"));
+				listener.onComplete();
+				return null;
 			}).when(mockClient).streamLogs(eq("foo"), any(ApplicationLogListener.class));
+
 			return mockClient;
 		}
-
 	}
-
 }
