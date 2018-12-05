@@ -53,8 +53,9 @@ import static org.mockito.Mockito.mock;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @EnableConfigurationProperties(LoggregatorProperties.class)
-@SpringBootTest({"loggregator.applicationName=foo", "loggregator.cloudFoundryUser=bar",
-		"loggregator.cloudFoundryPassword=baz", "loggregator.cloudFoundryApi=qux"})
+@SpringBootTest({ "loggregator.applicationName=foo", "loggregator.cloudFoundryUser=bar",
+		"loggregator.cloudFoundryPassword=baz", "loggregator.cloudFoundryApi=qux",
+		"spring.main.allow-bean-definition-overriding=true" })
 @DirtiesContext
 public class LoggregatorSourceTests {
 	@Autowired
